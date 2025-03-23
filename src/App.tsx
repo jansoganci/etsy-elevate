@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import CreateListing from "./pages/CreateListing";
 import Listings from "./pages/Listings";
 import Profile from "./pages/Profile";
+import OptimizePattern from "./pages/OptimizePattern";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/create" element={<CreateListing />} />
+          <Route path="/optimize" element={<OptimizePattern />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
