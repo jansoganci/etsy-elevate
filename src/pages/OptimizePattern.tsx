@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -38,8 +37,8 @@ const OptimizePattern = () => {
   };
 
   const handleNext = () => {
-    // Navigate to the next step
-    navigate('/create');
+    // Navigate to the review draft step
+    navigate('/review');
   };
 
   return (
