@@ -39,7 +39,7 @@ Care instructions: Hand wash only with mild soap. Periodically treat with food-s
   };
 
   const handleNext = () => {
-    navigate('/create');
+    navigate('/listing-generation');
   };
 
   return (
