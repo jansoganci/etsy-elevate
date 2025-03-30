@@ -7,7 +7,8 @@ import {
   ListChecks, 
   User, 
   ChevronLeft, 
-  ChevronRight 
+  ChevronRight,
+  Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -78,6 +79,13 @@ const AppSidebar = ({ isCollapsed, toggleSidebar }: AppSidebarProps) => {
           label="My Listings" 
           href="/listings" 
           isActive={activeRoute === '/listings'} 
+          isCollapsed={isCollapsed}
+        />
+        <SidebarItem 
+          icon={Search} 
+          label="SEO & Keywords" 
+          href="/seo-keywords" 
+          isActive={activeRoute === '/seo-keywords'} 
           isCollapsed={isCollapsed}
         />
         <SidebarItem 

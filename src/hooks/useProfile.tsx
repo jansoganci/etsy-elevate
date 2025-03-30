@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -57,7 +57,7 @@ export function useProfile() {
   });
 
   // Update form data when query data changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (data) {
       setFormData(data);
     }
