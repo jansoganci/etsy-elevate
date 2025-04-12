@@ -12,7 +12,7 @@ export const LiveDemoPreview = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-muted/20 pointer-events-none"></div>
       
       <div className="container px-4 md:px-6 relative">
-        <AnimateOnScroll>
+        <AnimateOnScroll animation="fade-up" duration={500}>
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="inline-flex h-6 animate-fade-in items-center rounded-full bg-primary/10 px-3 text-sm font-medium text-primary">
               <Zap size={16} className="mr-2" />
@@ -31,7 +31,7 @@ export const LiveDemoPreview = () => {
         </AnimateOnScroll>
         
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <AnimateOnScroll animation="fade-right" delay={200}>
+          <AnimateOnScroll animation="fade-right" delay={200} duration={500}>
             <div className="space-y-6">
               <Card className="hover:shadow-md transition-all duration-300 border-primary/10">
                 <CardContent className="p-6">
@@ -67,7 +67,7 @@ export const LiveDemoPreview = () => {
             </div>
           </AnimateOnScroll>
           
-          <AnimateOnScroll animation="fade-left" delay={400}>
+          <AnimateOnScroll animation="fade-left" delay={400} duration={500}>
             <Card className="bg-gradient-to-br from-background to-muted/30 shadow-md hover:shadow-lg transition-all duration-300">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center">
@@ -122,7 +122,7 @@ export const LiveDemoPreview = () => {
           </AnimateOnScroll>
         </div>
         
-        <AnimateOnScroll delay={600}>
+        <AnimateOnScroll animation="fade-up" delay={600} duration={500}>
           <div className="mt-12 text-center">
             <Button 
               size="lg" 

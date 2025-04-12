@@ -13,7 +13,7 @@ export const StickyCTA = () => {
       </div>
       
       <div className="container px-4 md:px-6 relative">
-        <AnimateOnScroll>
+        <AnimateOnScroll animation="fade-up" duration={500}>
           <div className="flex flex-col items-center justify-center space-y-6 text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center space-x-1 bg-background rounded-full px-3 py-1 text-sm font-medium shadow-sm">
               <Star className="h-3.5 w-3.5 fill-primary text-primary" />
@@ -44,7 +44,7 @@ export const StickyCTA = () => {
           </div>
         </AnimateOnScroll>
         
-        <AnimateOnScroll delay={300}>
+        <AnimateOnScroll animation="fade-up" delay={300} duration={500}>
           <div className="flex items-center justify-center gap-2 mt-8">
             <div className="flex -space-x-2">
               {[1, 2, 3, 4].map((i) => (
@@ -66,7 +66,7 @@ export const StickyCTA = () => {
           </div>
         </AnimateOnScroll>
         
-        <AnimateOnScroll delay={500}>
+        <AnimateOnScroll animation="zoom-in" delay={500} duration={500}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-2xl mt-4 mx-auto">
             {['Time Saved', 'Listings Created', 'Revenue Generated', 'Happy Sellers'].map((stat, i) => (
               <div key={i} className="bg-background rounded-lg p-3 shadow-sm hover:shadow-md transition-all hover:scale-105 cursor-pointer">

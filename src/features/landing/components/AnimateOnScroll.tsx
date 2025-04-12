@@ -14,9 +14,9 @@ export const AnimateOnScroll = ({
   children,
   animation = "fade-up",
   delay = 0,
-  threshold = 0.1,
+  threshold = 0.15, // Slightly higher threshold to make animations more noticeable
   className = "",
-  duration = 700,
+  duration = 600, // Increased default duration for more noticeable animations
 }: AnimateOnScrollProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -31,6 +31,7 @@ export const AnimateOnScroll = ({
       },
       {
         threshold,
+        rootMargin: "0px 0px -50px 0px", // Trigger slightly before the element is fully visible
       }
     );
 
@@ -47,10 +48,10 @@ export const AnimateOnScroll = ({
   }, [threshold]);
 
   const animationClasses = {
-    "fade-up": "translate-y-10 opacity-0",
-    "fade-left": "translate-x-10 opacity-0",
-    "fade-right": "-translate-x-10 opacity-0",
-    "zoom-in": "scale-95 opacity-0",
+    "fade-up": "translate-y-16 opacity-0", // Increased distance for more visible effect
+    "fade-left": "translate-x-16 opacity-0", // Increased distance for more visible effect
+    "fade-right": "-translate-x-16 opacity-0", // Increased distance for more visible effect
+    "zoom-in": "scale-90 opacity-0", // More dramatic scaling
     "fade-in": "opacity-0",
   };
 

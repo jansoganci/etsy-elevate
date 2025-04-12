@@ -13,7 +13,7 @@ type FeatureProps = {
 };
 
 const Feature = ({ title, problem, solution, icon, delay }: FeatureProps) => (
-  <AnimateOnScroll delay={delay}>
+  <AnimateOnScroll animation="fade-up" delay={delay} duration={500}>
     <Card className="h-full border-none shadow-md hover:shadow-lg transition-all duration-300">
       <CardContent className="p-6 space-y-4">
         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
@@ -69,7 +69,7 @@ export const ProblemSolution = () => {
       <div className="absolute inset-0 opacity-5 pointer-events-none bg-[linear-gradient(45deg,var(--primary)_25%,transparent_25%,transparent_50%,var(--primary)_50%,var(--primary)_75%,transparent_75%,transparent)] bg-[length:24px_24px]"></div>
       
       <div className="container px-4 md:px-6 relative">
-        <AnimateOnScroll>
+        <AnimateOnScroll animation="fade-up" duration={500}>
           <div className="flex flex-col items-center justify-center space-y-4 text-center max-w-3xl mx-auto">
             <div className="inline-flex h-6 animate-fade-in items-center rounded-full bg-primary/10 px-3 text-sm font-medium text-primary">
               Crafted for creative sellers
@@ -96,7 +96,7 @@ export const ProblemSolution = () => {
           ))}
         </div>
         
-        <AnimateOnScroll delay={600}>
+        <AnimateOnScroll animation="fade-up" delay={400} duration={500}>
           <div className="mt-12 text-center">
             <Button 
               size="lg" 
