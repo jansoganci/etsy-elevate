@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import CreateListing from "./pages/CreateListing";
 import Listings from "./pages/Listings";
 import Profile from "./pages/Profile";
-import OptimizePattern from "./pages/OptimizePattern";
+import optimizePattern from "./pages/optimizePattern";
 import ReviewDraft from "./pages/ReviewDraft";
 import ListingGeneration from "./pages/ListingGeneration";
 import EditProductImage from "./pages/EditProductImage";
@@ -28,7 +28,7 @@ const App = () => (
           <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={<Index />} />
           <Route path="/create" element={<CreateListing />} />
-          <Route path="/optimize" element={<OptimizePattern />} />
+          <Route path="/optimize" element={<optimizePattern />} />
           <Route path="/review" element={<ReviewDraft />} />
           <Route path="/listing-generation" element={<ListingGeneration />} />
           <Route path="/edit-image" element={<EditProductImage />} />
