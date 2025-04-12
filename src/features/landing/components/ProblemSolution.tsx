@@ -1,6 +1,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Clock, Search, PenTool } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Check, Clock, Search, PenTool, ArrowRight } from "lucide-react";
 
 type FeatureProps = {
   title: string;
