@@ -14,6 +14,7 @@ import ListingGeneration from "./pages/ListingGeneration";
 import EditProductImage from "./pages/EditProductImage";
 import SeoKeywordAnalysis from "./pages/SeoKeywordAnalysis";
 import NotFound from "./pages/NotFound";
+import LandingPage from "./pages/LandingPage";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +25,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/dashboard" element={<Index />} />
           <Route path="/create" element={<CreateListing />} />
           <Route path="/optimize" element={<OptimizePattern />} />
           <Route path="/review" element={<ReviewDraft />} />
