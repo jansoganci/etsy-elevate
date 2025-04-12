@@ -3,6 +3,7 @@ import { HeroSection } from "@/features/landing/components/HeroSection";
 import { ProblemSolution } from "@/features/landing/components/ProblemSolution";
 import { LiveDemoPreview } from "@/features/landing/components/LiveDemoPreview";
 import { StickyCTA } from "@/features/landing/components/StickyCTA";
+import { ScrollingStickyButton } from "@/features/landing/components/ScrollingStickyButton";
 
 const LandingPage = () => {
   return (
@@ -11,9 +12,9 @@ const LandingPage = () => {
         <div className="container flex items-center justify-between">
           <div className="text-xl font-bold">Zippify</div>
           <nav className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground">Features</a>
-            <a href="#how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground">How It Works</a>
-            <a href="/dashboard" className="text-sm font-medium text-primary">Dashboard</a>
+            <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</a>
+            <a href="#how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">How It Works</a>
+            <a href="/dashboard" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">Dashboard</a>
           </nav>
         </div>
       </header>
@@ -40,15 +41,15 @@ const LandingPage = () => {
             </div>
             <div className="flex flex-col space-y-2">
               <div className="text-sm font-bold mb-2">Legal</div>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground">Cookie Policy</a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms of Service</a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Cookie Policy</a>
             </div>
             <div className="flex flex-col space-y-2">
               <div className="text-sm font-bold mb-2">Company</div>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground">About Us</a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground">Contact</a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground">Blog</a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About Us</a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</a>
             </div>
           </div>
           <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
@@ -56,6 +57,8 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+      
+      <ScrollingStickyButton />
     </div>
   );
 };

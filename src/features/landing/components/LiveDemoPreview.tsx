@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap } from "lucide-react";
+import { AnimateOnScroll } from "./AnimateOnScroll";
 
 export const LiveDemoPreview = () => {
   return (
@@ -11,58 +12,62 @@ export const LiveDemoPreview = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-muted/20 pointer-events-none"></div>
       
       <div className="container px-4 md:px-6 relative">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="inline-flex h-6 animate-fade-in items-center rounded-full bg-primary/10 px-3 text-sm font-medium text-primary">
-            <Zap size={16} className="mr-2" />
-            See the magic happen
+        <AnimateOnScroll>
+          <div className="flex flex-col items-center justify-center space-y-4 text-center">
+            <div className="inline-flex h-6 animate-fade-in items-center rounded-full bg-primary/10 px-3 text-sm font-medium text-primary">
+              <Zap size={16} className="mr-2" />
+              See the magic happen
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                From Idea to <span className="text-primary">Perfect Listing</span> in Minutes
+              </h2>
+              <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed mx-auto">
+                No more staring at a blank screen. Just add your basic product details, 
+                and watch as Zippify transforms them into a complete, professional listing.
+              </p>
+            </div>
           </div>
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              From Idea to <span className="text-primary">Perfect Listing</span> in Minutes
-            </h2>
-            <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed mx-auto">
-              No more staring at a blank screen. Just add your basic product details, 
-              and watch as Zippify transforms them into a complete, professional listing.
-            </p>
-          </div>
-        </div>
+        </AnimateOnScroll>
         
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div className="space-y-6">
-            <Card className="hover:shadow-md transition-all duration-300 border-primary/10">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-4 flex items-center">
-                  <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-2 text-primary text-sm">1</span>
-                  You Provide the Basics
-                </h3>
-                <div className="space-y-4">
-                  <div className="transition-all duration-300 hover:bg-muted/50 p-2 rounded-md">
-                    <p className="text-sm font-medium mb-1 text-primary">Product Name</p>
-                    <p className="p-2 bg-muted rounded-md">Hand-knitted Alpaca Wool Sweater</p>
-                  </div>
-                  
-                  <div className="transition-all duration-300 hover:bg-muted/50 p-2 rounded-md">
-                    <p className="text-sm font-medium mb-1 text-primary">Brief Description</p>
-                    <p className="p-2 bg-muted rounded-md">Warm sweater made from alpaca wool in blue color, size medium.</p>
-                  </div>
-                  
-                  <div className="transition-all duration-300 hover:bg-muted/50 p-2 rounded-md">
-                    <p className="text-sm font-medium mb-1 text-primary">Product Image</p>
-                    <div className="w-full h-32 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
-                      <div className="flex flex-col items-center">
-                        <svg className="w-10 h-10 text-primary/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        <p className="text-xs mt-2">Your product photo</p>
+          <AnimateOnScroll animation="fade-right" delay={200}>
+            <div className="space-y-6">
+              <Card className="hover:shadow-md transition-all duration-300 border-primary/10">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-2 text-primary text-sm">1</span>
+                    You Provide the Basics
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="transition-all duration-300 hover:bg-muted/50 p-2 rounded-md">
+                      <p className="text-sm font-medium mb-1 text-primary">Product Name</p>
+                      <p className="p-2 bg-muted rounded-md">Hand-knitted Alpaca Wool Sweater</p>
+                    </div>
+                    
+                    <div className="transition-all duration-300 hover:bg-muted/50 p-2 rounded-md">
+                      <p className="text-sm font-medium mb-1 text-primary">Brief Description</p>
+                      <p className="p-2 bg-muted rounded-md">Warm sweater made from alpaca wool in blue color, size medium.</p>
+                    </div>
+                    
+                    <div className="transition-all duration-300 hover:bg-muted/50 p-2 rounded-md">
+                      <p className="text-sm font-medium mb-1 text-primary">Product Image</p>
+                      <div className="w-full h-32 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
+                        <div className="flex flex-col items-center">
+                          <svg className="w-10 h-10 text-primary/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                          </svg>
+                          <p className="text-xs mt-2">Your product photo</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
+            </div>
+          </AnimateOnScroll>
           
-          <div>
+          <AnimateOnScroll animation="fade-left" delay={400}>
             <Card className="bg-gradient-to-br from-background to-muted/30 shadow-md hover:shadow-lg transition-all duration-300">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center">
@@ -114,18 +119,23 @@ export const LiveDemoPreview = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </AnimateOnScroll>
         </div>
         
-        <div className="mt-12 text-center">
-          <Button size="lg" className="group bg-primary">
-            Try It With Your Product
-            <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
-          <p className="text-sm text-muted-foreground mt-3">
-            No technical skills required. Just upload and let AI do the work.
-          </p>
-        </div>
+        <AnimateOnScroll delay={600}>
+          <div className="mt-12 text-center">
+            <Button 
+              size="lg" 
+              className="group bg-primary hover:scale-105 hover:shadow-lg transition-all duration-300"
+            >
+              Try It With Your Product
+              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <p className="text-sm text-muted-foreground mt-3">
+              No technical skills required. Just upload and let AI do the work.
+            </p>
+          </div>
+        </AnimateOnScroll>
       </div>
     </section>
   );
