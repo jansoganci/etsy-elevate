@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { User, Moon, Sun, Globe, LogOut } from 'lucide-react';
 import { 
@@ -23,8 +22,8 @@ const Header = () => {
   return (
     <header 
       className="
-        w-full 
         sticky top-0 z-50 
+        w-full 
         backdrop-blur-sm 
         bg-white/80 dark:bg-gray-900/80 
         border-b border-gray-200 dark:border-gray-700
