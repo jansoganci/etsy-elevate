@@ -32,11 +32,11 @@ const Listings = () => {
           {MOCK_LISTINGS.map((listing) => (
             <ListingCard
               key={listing.id}
+              id={listing.id}
               title={listing.title}
               createdAt={listing.createdAt}
               description={listing.description}
               tags={listing.tags}
-              onListingClick={() => navigate(`/listings/${listing.id}`)}
             />
           ))}
         </div>
