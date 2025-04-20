@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Moon, Sun } from 'lucide-react';
-import { HeroSection } from "@/features/landing/components/HeroSection";
+import ImprovedHeroSection from "@/features/landing/components/ImprovedHeroSection";
 import { ProblemSolution } from "@/features/landing/components/ProblemSolution";
 import { LiveDemoPreview } from "@/features/landing/components/LiveDemoPreview";
 import { StickyCTA } from "@/features/landing/components/StickyCTA";
@@ -45,7 +45,7 @@ const LandingPage = () => {
       </header>
       
       <main className="flex-1">
-        <HeroSection />
+        <ImprovedHeroSection />
         <div id="features">
           <ProblemSolution />
         </div>
@@ -89,3 +89,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
