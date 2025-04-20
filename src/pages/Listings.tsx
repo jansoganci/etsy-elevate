@@ -1,6 +1,7 @@
 
 import DashboardLayout from '@/components/DashboardLayout';
 import ListingCard from '@/components/ListingCard';
+import { useNavigate } from 'react-router-dom';
 
 const MOCK_LISTINGS = [
   {
@@ -20,6 +21,8 @@ const MOCK_LISTINGS = [
 ];
 
 const Listings = () => {
+  const navigate = useNavigate();
+  
   return (
     <DashboardLayout>
       <div className="py-8">
@@ -33,7 +36,7 @@ const Listings = () => {
               createdAt={listing.createdAt}
               description={listing.description}
               tags={listing.tags}
-              onClick={() => console.log('Clicked listing:', listing.id)}
+              onListingClick={() => navigate(`/listings/${listing.id}`)}
             />
           ))}
         </div>

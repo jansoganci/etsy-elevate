@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,7 +8,7 @@ import Index from "./pages/Index";
 import CreateListing from "./pages/CreateListing";
 import Listings from "./pages/Listings";
 import Profile from "./pages/Profile";
-import OptimizePattern from "./pages/optimizePattern";
+import OptimizePattern from "./pages/OptimizePattern";
 import ReviewDraft from "./pages/ReviewDraft";
 import ListingGeneration from "./pages/ListingGeneration";
 import EditProductImage from "./pages/EditProductImage";
