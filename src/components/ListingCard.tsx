@@ -11,6 +11,7 @@ interface ListingCardProps {
   createdAt: Date;
   description: string;
   tags: string[];
+  onListingClick?: () => void;
 }
 
 const ListingCard = ({
@@ -19,14 +20,14 @@ const ListingCard = ({
   createdAt,
   description,
   tags,
+  onListingClick,
 }: ListingCardProps) => {
-  const navigate = useNavigate();
   const displayTags = tags.slice(0, 5);
   const remainingTags = tags.length - 5;
 
   return (
     <Card 
-      onClick={() => navigate(`/listings/${id}`)}
+      onClick={() => onListingClick?.()}
       className="hover:shadow-md hover:border-primary/20 transition-all duration-300 cursor-pointer"
     >
       <CardContent className="p-6">

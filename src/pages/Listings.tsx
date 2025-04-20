@@ -37,6 +37,7 @@ const Listings = () => {
               createdAt={listing.createdAt}
               description={listing.description}
               tags={listing.tags}
+              onListingClick={() => navigate(`/listings/${listing.id}`)}
             />
           ))}
         </div>
