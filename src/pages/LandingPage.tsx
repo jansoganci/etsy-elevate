@@ -6,6 +6,7 @@ import { ProblemSolution } from "@/features/landing/components/ProblemSolution";
 import { LiveDemoPreview } from "@/features/landing/components/LiveDemoPreview";
 import { StickyCTA } from "@/features/landing/components/StickyCTA";
 import { ScrollingStickyButton } from "@/features/landing/components/ScrollingStickyButton";
+import ProcessSteps from '@/features/landing/components/ProcessSteps';
 
 const LandingPage = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -49,6 +50,7 @@ const LandingPage = () => {
         <div id="features">
           <ProblemSolution />
         </div>
+        <ProcessSteps />
         <div id="how-it-works">
           <LiveDemoPreview />
         </div>
@@ -89,4 +91,3 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
-
