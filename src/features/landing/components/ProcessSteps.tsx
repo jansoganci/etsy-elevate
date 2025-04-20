@@ -1,6 +1,5 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { AnimateOnScroll } from "./AnimateOnScroll";
 
 const ProcessStepCard = ({ number, title, children }: {
@@ -36,7 +35,7 @@ const ProcessSteps = () => {
               From Idea to Perfect Listing in Minutes
             </h2>
             <p className="max-w-[700px] text-muted-foreground md:text-lg">
-              No more staring at a blank screen. Let AI do the heavy lifting.
+              No more staring at a blank screen. Just add your basic product details, and watch as Zippify transforms them into a complete, professional listing.
             </p>
           </div>
         </AnimateOnScroll>
@@ -83,4 +82,3 @@ const ProcessSteps = () => {
 };
 
 export default ProcessSteps;
-
