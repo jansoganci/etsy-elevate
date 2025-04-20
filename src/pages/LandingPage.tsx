@@ -2,11 +2,11 @@
 import { useState, useEffect } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import ImprovedHeroSection from "@/features/landing/components/ImprovedHeroSection";
-import FeaturesSection from '@/features/landing/components/FeaturesSection';
-import ProcessSteps from '@/features/landing/components/ProcessSteps';
+import { ProblemSolution } from "@/features/landing/components/ProblemSolution";
 import { LiveDemoPreview } from "@/features/landing/components/LiveDemoPreview";
 import { StickyCTA } from "@/features/landing/components/StickyCTA";
 import { ScrollingStickyButton } from "@/features/landing/components/ScrollingStickyButton";
+import ProcessSteps from '@/features/landing/components/ProcessSteps';
 
 const LandingPage = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -48,7 +48,7 @@ const LandingPage = () => {
       <main className="flex-1">
         <ImprovedHeroSection />
         <div id="features">
-          <FeaturesSection />
+          <ProblemSolution />
         </div>
         <ProcessSteps />
         <div id="how-it-works">
