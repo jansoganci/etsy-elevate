@@ -1,6 +1,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, X, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ProblemSolutionCardProps = {
@@ -27,16 +27,14 @@ export const ProblemSolutionCard = ({
         <h3 className="text-xl font-bold text-[#1F2937] dark:text-[#EDE9EB]">{title}</h3>
         <div className="space-y-3">
           <div className="flex items-start group">
-            <div className="p-1 rounded-full bg-destructive/20 mr-2 mt-1 group-hover:scale-110 transition-transform">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <span className="text-[#DC2626] dark:text-[#EF4444] text-xs">×</span>
-              </div>
+            <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/20 mr-2 mt-1 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <X className="w-4 h-4 text-red-500 dark:text-[#EF4444]" />
             </div>
             <p className="text-[#4B5563] dark:text-[#9CA3AF] text-sm">{problem}</p>
           </div>
           <div className="flex items-start group">
-            <div className="p-1 rounded-full bg-green-500/20 mr-2 mt-1 group-hover:scale-110 transition-transform">
-              <span className="text-[#059669] dark:text-[#10B981] text-xs">✓</span>
+            <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/20 mr-2 mt-1 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Check className="w-4 h-4 text-green-500 dark:text-[#10B981]" />
             </div>
             <p className="text-[#111827] dark:text-[#F9FAFB] text-sm">{solution}</p>
           </div>
@@ -45,3 +43,4 @@ export const ProblemSolutionCard = ({
     </Card>
   );
 };
+
