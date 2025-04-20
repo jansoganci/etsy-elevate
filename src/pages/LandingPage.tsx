@@ -1,4 +1,6 @@
 
+import { useState, useEffect } from 'react';
+import { Moon, Sun } from 'lucide-react';
 import { HeroSection } from "@/features/landing/components/HeroSection";
 import { ProblemSolution } from "@/features/landing/components/ProblemSolution";
 import { LiveDemoPreview } from "@/features/landing/components/LiveDemoPreview";
@@ -6,6 +8,22 @@ import { StickyCTA } from "@/features/landing/components/StickyCTA";
 import { ScrollingStickyButton } from "@/features/landing/components/ScrollingStickyButton";
 
 const LandingPage = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    const useDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setDarkMode(useDark);
+    document.documentElement.classList.toggle('dark', useDark);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !darkMode;
+    setDarkMode(next);
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="w-full h-16 border-b bg-background z-10 flex items-center">
@@ -15,6 +33,13 @@ const LandingPage = () => {
             <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</a>
             <a href="#how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">How It Works</a>
             <a href="/dashboard" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">Dashboard</a>
+            <button 
+              onClick={toggleTheme} 
+              className="ml-4 p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+              aria-label="Toggle theme"
+            >
+              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
           </nav>
         </div>
       </header>
