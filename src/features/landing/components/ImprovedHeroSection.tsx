@@ -10,10 +10,10 @@ const ImprovedHeroSection = () => {
         <div className="flex flex-col items-center text-center space-y-4">
           <AnimateOnScroll>
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-              Your Etsy Listing Assistant
+              AI‑Powered Etsy Listings in 2 Minutes Flat
             </h1>
             <p className="mx-auto max-w-[700px] text-lg text-muted-foreground leading-relaxed mt-4">
-              Create professional, SEO-optimized Etsy listings in minutes. Let AI help you craft compelling titles, descriptions, and tags that sell.
+              Stop struggling with bland descriptions and invisible listings. Zippify transforms your product ideas into SEO‑optimized Etsy listings that actually sell.
             </p>
           </AnimateOnScroll>
 
@@ -23,7 +23,7 @@ const ImprovedHeroSection = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Before Card */}
                   <div className="p-6 rounded-lg shadow-md bg-[#F3F4F6]">
-                    <h3 className="text-lg font-semibold mb-4">Before</h3>
+                    <h3 className="text-base font-bold mb-4">Before</h3>
                     <div className="space-y-3">
                       <div className="h-4 bg-[#F9FAFB]/95 rounded" />
                       <div className="h-4 bg-[#F9FAFB]/95 rounded w-3/4" />
@@ -33,7 +33,7 @@ const ImprovedHeroSection = () => {
 
                   {/* After Card */}
                   <div className="p-6 rounded-lg shadow-md bg-[#EDE9FE]">
-                    <h3 className="text-lg font-semibold mb-4">After</h3>
+                    <h3 className="text-base font-bold mb-4">After</h3>
                     <div className="space-y-3">
                       <div className="h-4 bg-[#F9FAFB]/95 rounded" />
                       <div className="h-4 bg-[#F9FAFB]/95 rounded w-3/4" />
@@ -43,13 +43,8 @@ const ImprovedHeroSection = () => {
                 </div>
 
                 {/* Slider Handle Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <Slider 
-                    defaultValue={[50]}
-                    max={100}
-                    step={1}
-                    className="w-1/2 max-w-[200px]"
-                  />
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-1 h-12 bg-gray-300 rounded cursor-grab opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                 </div>
               </div>
             </AnimateOnScroll>
@@ -61,7 +56,7 @@ const ImprovedHeroSection = () => {
                 size="lg" 
                 className="px-8 py-3 hover:translate-x-1 transition-transform duration-200"
               >
-                Get Started Free
+                Create Your First Listing Free
               </Button>
             </AnimateOnScroll>
           </div>
