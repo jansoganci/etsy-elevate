@@ -3,17 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Search, FileText, Image, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimateOnScroll } from "@/features/landing/components/AnimateOnScroll";
-import { 
-  Card,
-  CardContent
-} from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Feature content data
 const featureContent = [
@@ -22,7 +12,7 @@ const featureContent = [
     title: "SEO & Keyword Analysis",
     icon: Search,
     subtitle: "Find untapped opportunities with AI-powered keyword research.",
-    videoSrc: "https://placehold.it/1280x720.mp4", // Replace with actual video path
+    videoSrc: "https://placehold.it/1280x720.mp4", // Replace with real
     color: "purple"
   },
   {
@@ -30,7 +20,7 @@ const featureContent = [
     title: "Effortless Listing Creation",
     icon: FileText,
     subtitle: "AI writes conversion-focused listings in seconds.",
-    videoSrc: "https://placehold.it/1280x720.mp4", // Replace with actual video path
+    videoSrc: "https://placehold.it/1280x720.mp4", // Replace with real
     color: "yellow"
   },
   {
@@ -38,7 +28,7 @@ const featureContent = [
     title: "Visual Photo Editing",
     icon: Image,
     subtitle: "Transform product images with one-click enhancements.",
-    videoSrc: "https://placehold.it/1280x720.mp4", // Replace with actual video path
+    videoSrc: "https://placehold.it/1280x720.mp4", // Replace with real
     color: "green"
   }
 ];
@@ -46,193 +36,131 @@ const featureContent = [
 export const LiveDemoPreview = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+
+  // Responsive size state for mobile adaptation
   const [isMobile, setIsMobile] = useState(false);
-  
-  // Check if device is mobile
+
+  // Track window resize for responsiveness
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Autoplay video on feature switch
   useEffect(() => {
-    // Play the video when the component mounts
     if (videoRef.current) {
       videoRef.current.play();
     }
   }, [activeIndex]);
 
   return (
-    <section 
-      ref={sectionRef} 
-      className="relative py-24 overflow-hidden"
-      id="features"
-    >
-      {/* Animated background with gradient */}
+    <section className="relative py-20 overflow-hidden" id="features">
+      {/* Subtle background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/20 z-0">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_500px_at_50%_300px,rgba(155,135,245,0.3),transparent)]"></div>
         </div>
       </div>
-
-      <div className="container relative z-10 px-4 mx-auto">
-        <AnimateOnScroll animation="fade-up" className="text-center mb-16">
+      <div className="container relative z-10 px-2 mx-auto">
+        <AnimateOnScroll animation="fade-up" className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
-            Powerful Tools for <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">Etsy Sellers</span>
+            Powerful Tools for{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">Etsy Sellers</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Simplify your workflow and boost sales with our integrated suite of seller tools.
           </p>
         </AnimateOnScroll>
-        
-        {/* Main feature display area */}
-        <div className="relative mt-12 md:mt-20 max-w-7xl mx-auto">
-          {/* Video/image display for current feature */}
-          <div className="mb-12 md:mb-16 relative">
-            <div className="aspect-video rounded-xl overflow-hidden shadow-2xl border border-white/10 relative group">
-              {/* Overlay with gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 opacity-80"></div>
-              
-              {/* Feature video */}
-              <video 
+        {/* Desktop two-col layout */}
+        <div className={`flex flex-col ${isMobile ? "" : "md:flex-row md:justify-center md:items-stretch"} w-full gap-6 md:gap-12 max-w-6xl mx-auto transition-all`}>
+          {/* Left/Top: Main video card */}
+          <div className={`${isMobile ? "" : "w-full md:w-[60%]"} flex items-center justify-center`}>
+            <div className="relative aspect-video w-full md:w-full rounded-2xl shadow-2xl overflow-hidden border border-white/10 bg-black">
+              {/* Video */}
+              <video
                 ref={videoRef}
                 className="w-full h-full object-cover"
-                autoPlay 
+                autoPlay
                 playsInline
-                muted 
+                muted
                 loop
+                poster=""
+                style={{
+                  background: "#222",
+                }}
               >
                 <source src={featureContent[activeIndex].videoSrc} type="video/mp4" />
               </video>
-              
-              {/* Feature title overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-20 bg-gradient-to-t from-black/80 to-transparent">
+              {/* Subtle overlay for text */}
+              {/* Subtle overlay: from 0% at top to 30% black at bottom */}
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/0 via-black/10 to-black/30"></div>
+
+              {/* Text overlay */}
+              <div className="absolute left-0 bottom-0 right-0 px-6 py-8 md:px-10 z-10 flex flex-col gap-2">
                 <div className="flex items-center">
                   <div className={`
-                    mr-4 w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold shrink-0
+                    mr-4 w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold shrink-0 
                     ${activeIndex === 0 ? "bg-purple-100 text-purple-600" :
                       activeIndex === 1 ? "bg-yellow-100 text-yellow-600" :
                       "bg-green-100 text-green-600"}
                   `}>
                     {featureContent[activeIndex].id}
                   </div>
-                  <div>
-                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{featureContent[activeIndex].title}</h3>
-                    <p className="text-white/80 text-lg md:text-xl max-w-2xl">{featureContent[activeIndex].subtitle}</p>
-                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-1">{featureContent[activeIndex].title}</h3>
                 </div>
+                <p className="text-white/90 text-lg md:text-xl">{featureContent[activeIndex].subtitle}</p>
               </div>
             </div>
           </div>
-
-          {/* Feature selection area */}
-          {isMobile ? (
-            <div className="px-4">
-              <Carousel
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-                className="w-full"
-                onSelect={(index) => {
-                  if (typeof index === 'number') {
-                    setActiveIndex(index % featureContent.length);
-                  }
-                }}
-              >
-                <CarouselContent>
-                  {featureContent.map((feature, index) => {
-                    const Icon = feature.icon;
-                    return (
-                      <CarouselItem key={feature.id} className="md:basis-1/2 lg:basis-1/3">
-                        <Card className={`border-l-4 ${
-                          index === 0 ? "border-l-purple-500" :
-                          index === 1 ? "border-l-yellow-500" :
-                          "border-l-green-500"
-                        } hover:shadow-lg transition-all duration-300 h-full`}>
-                          <CardContent className="p-6">
-                            <div className="flex items-center mb-4">
-                              <Icon className={`
-                                w-7 h-7
-                                ${index === 0 ? "text-purple-500" :
-                                  index === 1 ? "text-yellow-500" :
-                                  "text-green-500"}
-                              `} />
-                              <div className="ml-3 font-semibold text-lg">{feature.title}</div>
-                            </div>
-                            <p className="text-muted-foreground">{feature.subtitle}</p>
-                          </CardContent>
-                        </Card>
-                      </CarouselItem>
-                    );
-                  })}
-                </CarouselContent>
-                <div className="flex justify-center mt-4 gap-2">
-                  <CarouselPrevious className="relative -left-0 static" />
-                  <CarouselNext className="relative -right-0 static" />
-                </div>
-              </Carousel>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {featureContent.map((feature, index) => {
-                const Icon = feature.icon;
-                const isActive = index === activeIndex;
-                
-                return (
-                  <Card 
-                    key={feature.id}
-                    className={`
-                      overflow-hidden border-l-4 transition-all duration-300
-                      ${isActive ? 'ring-2 ring-primary shadow-lg' : 'opacity-80 hover:opacity-100'}
-                      ${index === 0 ? "border-l-purple-500" :
-                        index === 1 ? "border-l-yellow-500" :
-                        "border-l-green-500"}
+          {/* Right/Bottom: Three smaller feature cards */}
+          <div className={`${isMobile ? "mt-6 flex flex-col gap-4" : "flex flex-col gap-6 w-full md:w-[40%] min-w-[250px] max-w-xs"}`}>
+            {featureContent.map((feature, index) => {
+              const Icon = feature.icon;
+              const isActive = index === activeIndex;
+              return (
+                <button
+                  key={feature.id}
+                  onClick={() => setActiveIndex(index)}
+                  className={`group relative w-full transition-all focus:outline-none
+                    ${isActive
+                      ? "z-10 opacity-100 scale-105 border-2 border-primary bg-background"
+                      : "opacity-60 scale-100 border border-transparent"}
+                    rounded-xl shadow-md px-4 md:px-3 py-3 md:py-4 hover:opacity-90 hover:scale-105
+                    flex items-center gap-4
+                  `}
+                  style={{minHeight: isMobile ? 72 : 88}}
+                  aria-current={isActive}
+                  tabIndex={0}
+                >
+                  <div className={`
+                      w-12 h-12 flex items-center justify-center rounded-full bg-white/90 shadow
+                      ${index === 0 ? "text-purple-500 ring-2 ring-purple-200" :
+                        index === 1 ? "text-yellow-600 ring-2 ring-yellow-200" :
+                        "text-green-600 ring-2 ring-green-200"}
                     `}
-                    onClick={() => setActiveIndex(index)}
                   >
-                    <CardContent className="p-6">
-                      <div className="flex items-center mb-3">
-                        <Icon className={`
-                          w-6 h-6
-                          ${index === 0 ? "text-purple-500" :
-                            index === 1 ? "text-yellow-500" :
-                            "text-green-500"}
-                        `} />
-                        <span className="ml-3 font-bold text-lg">{feature.title}</span>
-                      </div>
-                      <p className="text-muted-foreground text-sm">{feature.subtitle}</p>
-                      
-                      <div className={`
-                        mt-4 text-sm font-medium flex items-center
-                        ${index === 0 ? "text-purple-500" :
-                          index === 1 ? "text-yellow-500" :
-                          "text-green-500"}
-                        transition-opacity duration-300
-                        ${isActive ? 'opacity-100' : 'opacity-0'}
-                      `}>
-                        <span>Currently viewing</span>
-                        <ArrowRight className="w-4 h-4 ml-1" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
+                    <Icon className="w-7 h-7" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <span className="block font-semibold text-base md:text-lg">{feature.title}</span>
+                    <span className="block text-xs md:text-sm text-muted-foreground">{feature.subtitle}</span>
+                  </div>
+                  {/* Arrow indicator for active */}
+                  {isActive && (
+                    <ArrowRight className={`ml-2 text-primary animate-fade-in transition-all`} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
-        
         {/* CTA Button */}
         <AnimateOnScroll 
           animation="fade-up" 
           delay={300} 
-          className="mt-16 flex justify-center"
+          className="mt-12 flex justify-center"
         >
           <Button
             size="lg"
