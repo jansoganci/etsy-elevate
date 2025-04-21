@@ -98,24 +98,24 @@ export const LiveDemoPreview = () => {
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/0 via-black/10 to-black/30"></div>
 
               {/* Text overlay */}
-              <div className="absolute left-0 bottom-0 right-0 px-6 py-8 md:px-10 z-10 flex flex-col gap-2">
+              <div className="absolute left-0 bottom-0 right-0 px-6 py-6 md:px-10 z-10 flex flex-col gap-1">
                 <div className="flex items-center">
                   <div className={`
-                    mr-4 w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold shrink-0 
+                    mr-4 w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shrink-0 
                     ${activeIndex === 0 ? "bg-purple-100 text-purple-600" :
                       activeIndex === 1 ? "bg-yellow-100 text-yellow-600" :
                       "bg-green-100 text-green-600"}
                   `}>
                     {featureContent[activeIndex].id}
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-1">{featureContent[activeIndex].title}</h3>
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1">{featureContent[activeIndex].title}</h3>
                 </div>
-                <p className="text-white/90 text-lg md:text-xl">{featureContent[activeIndex].subtitle}</p>
+                <p className="text-white/90 text-sm md:text-base">{featureContent[activeIndex].subtitle}</p>
               </div>
             </div>
           </div>
           {/* Right/Bottom: Three smaller feature cards */}
-          <div className={`${isMobile ? "mt-6 flex flex-col gap-4" : "flex flex-col gap-6 w-full md:w-[40%] min-w-[250px] max-w-xs"}`}>
+          <div className={`${isMobile ? "mt-6 flex flex-col gap-3" : "flex flex-col gap-4 w-full md:w-[40%] min-w-[250px] max-w-xs"}`}>
             {featureContent.map((feature, index) => {
               const Icon = feature.icon;
               const isActive = index === activeIndex;
@@ -127,25 +127,25 @@ export const LiveDemoPreview = () => {
                     ${isActive
                       ? "z-10 opacity-100 scale-105 border-2 border-primary bg-background"
                       : "opacity-60 scale-100 border border-transparent"}
-                    rounded-xl shadow-md px-4 md:px-3 py-3 md:py-4 hover:opacity-90 hover:scale-105
-                    flex items-center gap-4
+                    rounded-xl shadow-md px-3 md:px-2 py-2 md:py-3 hover:opacity-90 hover:scale-105
+                    flex items-center gap-3
                   `}
-                  style={{minHeight: isMobile ? 72 : 88}}
+                  style={{minHeight: isMobile ? 60 : 72}}
                   aria-current={isActive}
                   tabIndex={0}
                 >
                   <div className={`
-                      w-12 h-12 flex items-center justify-center rounded-full bg-white/90 shadow
+                      w-10 h-10 flex items-center justify-center rounded-full bg-white/90 shadow
                       ${index === 0 ? "text-purple-500 ring-2 ring-purple-200" :
                         index === 1 ? "text-yellow-600 ring-2 ring-yellow-200" :
                         "text-green-600 ring-2 ring-green-200"}
                     `}
                   >
-                    <Icon className="w-7 h-7" />
+                    <Icon className="w-5 h-5" />
                   </div>
                   <div className="flex-1 text-left">
-                    <span className="block font-semibold text-base md:text-lg">{feature.title}</span>
-                    <span className="block text-xs md:text-sm text-muted-foreground">{feature.subtitle}</span>
+                    <span className="block font-semibold text-sm md:text-base">{feature.title}</span>
+                    <span className="block text-xs md:text-xs text-muted-foreground">{feature.subtitle}</span>
                   </div>
                   {/* Arrow indicator for active */}
                   {isActive && (
