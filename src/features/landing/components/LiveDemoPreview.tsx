@@ -2,194 +2,305 @@
 import { useEffect, useRef, useState } from "react";
 import { Search, FileText, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { AnimateOnScroll } from "@/features/landing/components/AnimateOnScroll";
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext 
+} from "@/components/ui/carousel";
 
-// Placeholder looping GIFs/videos (these can be replaced with your own files)
+// Feature media content
 const featureMedia = [
   {
     title: "SEO & Keyword Analysis",
     icon: Search,
-    subtitle: "Find the best keywords for your shop fast.",
-    media: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=400&q=80"
+    subtitle: "Find untapped opportunities with AI-powered keyword research.",
+    media: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80",
+    color: "purple"
   },
   {
     title: "Effortless Listing Creation",
     icon: FileText,
-    subtitle: "AI writes listings that convert sales every time.",
-    media: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=400&q=80"
+    subtitle: "AI writes conversion-focused listings in seconds.",
+    media: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80",
+    color: "yellow"
   },
   {
     title: "Visual Photo Editing",
     icon: Image,
-    subtitle: "Enhance photos and remove backgrounds instantly.",
-    media: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=400&q=80"
+    subtitle: "Transform product images with one-click enhancements.",
+    media: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+    color: "green"
   }
 ];
 
-const isMobile = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(max-width: 768px)").matches;
-
 export const LiveDemoPreview = () => {
-  const [activeIdx, setActiveIdx] = useState(1); // center by default
-  const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [entered, setEntered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // For mobile, tap-to-activate; on desktop, sync with scroll
+  // Check if device is mobile
   useEffect(() => {
-    if (isMobile()) return;
-    const observers: IntersectionObserver[] = [];
-    containerRefs.current.forEach((ref, idx) => {
-      if (!ref) return;
-      const observer = new window.IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveIdx(idx);
-        },
-        {
-          root: null,
-          threshold: 0.55
-        }
-      );
-      observer.observe(ref);
-      observers.push(observer);
-    });
-    return () => {
-      observers.forEach(obs => obs.disconnect());
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
     };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Entry animation trigger
-  const [entered, setEntered] = useState([false, false, false]);
+  // Animation entry effect
   useEffect(() => {
-    const timeout: NodeJS.Timeout = setTimeout(() => {
-      setEntered([true, true, true]);
-    }, 100);
+    const timeout = setTimeout(() => {
+      setEntered(true);
+    }, 200);
+    
     return () => clearTimeout(timeout);
   }, []);
 
-  // Responsive: check mobile on window resize
+  // Auto-rotation for carousel on desktop
   useEffect(() => {
-    const handler = () => {
-      if (isMobile() && activeIdx === -1) setActiveIdx(0);
+    if (isMobile) return;
+    
+    const startAutoRotation = () => {
+      intervalRef.current = setInterval(() => {
+        setActiveIdx(prev => (prev + 1) % featureMedia.length);
+      }, 5000);
     };
-    window.addEventListener("resize", handler);
-    return () => window.removeEventListener("resize", handler);
-  }, [activeIdx]);
+    
+    startAutoRotation();
+    
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isMobile]);
+
+  // Pause auto-rotation on hover
+  const handleMouseEnter = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  };
+
+  const handleMouseLeave = () => {
+    if (!isMobile && intervalRef.current === null) {
+      intervalRef.current = setInterval(() => {
+        setActiveIdx(prev => (prev + 1) % featureMedia.length);
+      }, 5000);
+    }
+  };
 
   return (
-    <section className="w-full bg-background py-16 relative overflow-x-hidden">
-      {/* 3-col row, stacks on mobile */}
-      <div
-        className="max-w-6xl mx-auto flex flex-row md:space-x-8 space-x-0 space-y-0 md:space-y-0
-                    md:flex-row flex-col space-y-8 md:space-y-0 px-4"
-        style={{ minHeight: "420px" }}
-      >
-        {featureMedia.map((feature, i) => {
-          const Icon = feature.icon;
-          // Highlight if centered (active)
-          const isActive = i === activeIdx;
-          const fadeInUp = entered[i]
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10";
-          return (
-            <div
-              ref={el => (containerRefs.current[i] = el)}
-              key={feature.title}
-              tabIndex={0}
-              onClick={() => isMobile() && setActiveIdx(i)}
-              className={`
-                group relative transition-all duration-300 ease-out
-                rounded-2xl shadow-lg cursor-pointer
-                flex-1 min-w-[0] flex flex-col items-center
-                bg-white/70 dark:bg-card border border-muted
-                ${isActive ? "scale-105 opacity-100 z-10 ring-2 ring-primary/70 shadow-2xl" : "opacity-50 scale-100"}
-                ${fadeInUp}
-                md:mx-2 mb-0
-                focus:outline-none focus:ring-2 focus:ring-primary
-              `}
-              style={{
-                transitionProperty:
-                  "opacity, box-shadow, transform, filter",
-                transitionDuration: "300ms",
-                willChange: "transform, opacity",
-                minHeight: 340,
-              }}
-            >
-              {/* Accent badge and icon */}
-              <div className={`flex items-center space-x-3 mt-8`}>
-                <span
-                  className={`
-                    flex items-center justify-center font-bold
-                    rounded-full w-10 h-10 text-xl shadow
-                    border-4
-                    ${
-                      i === 0
-                        ? "bg-purple-200 text-purple-600 border-purple-300"
-                        : i === 1
-                        ? "bg-yellow-200 text-yellow-700 border-yellow-300"
-                        : "bg-green-200 text-green-700 border-green-300"
-                    }
-                  `}
-                >
-                  {i + 1}
-                </span>
-                <Icon
-                  className={`w-8 h-8
-                    ${
-                      i === 0
-                        ? "text-purple-500"
-                        : i === 1
-                        ? "text-yellow-500"
-                        : "text-green-500"
-                    }
-                  `}
-                />
-              </div>
-              {/* Title */}
-              <h3 className="font-extrabold text-2xl md:text-2xl mt-4 mb-2 text-center tracking-tight">
-                {feature.title}
-              </h3>
-              {/* Subtitle */}
-              <p className="text-base text-muted-foreground font-medium text-center mb-4 px-2 max-w-[260px]">
-                {feature.subtitle}
-              </p>
-              {/* Media Demo (image/gif/video) */}
-              <div
-                className={`
-                  w-[220px] h-[160px] md:w-[250px] md:h-[180px] rounded-xl
-                  bg-muted overflow-hidden flex items-center justify-center
-                  mb-7 shadow-inner
-                  border-2 border-muted
-                  transition-all duration-500
-                  ${isActive ? "ring-2 ring-primary/30 shadow-xl" : ""}
-                `}
-                style={{
-                  aspectRatio: "5/4",
-                  background: "#f9fafc",
-                }}
-              >
-                {/* Replace with actual looping GIF/video as needed */}
-                <img
-                  src={feature.media}
-                  alt={feature.title}
-                  className="object-cover w-full h-full"
-                  style={{
-                    animation: "fadeIn 0.8s",
-                    borderRadius: "12px"
-                  }}
-                  loading="lazy"
-                />
-              </div>
+    <section 
+      ref={sectionRef} 
+      className="relative py-24 overflow-hidden bg-gradient-to-b from-background to-background/80"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="container px-4 mx-auto">
+        <AnimateOnScroll animation="fade-up" className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
+            Powerful Tools for <span className="text-primary">Etsy Sellers</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Simplify your workflow and boost sales with our integrated suite of seller tools.
+          </p>
+        </AnimateOnScroll>
+        
+        {isMobile ? (
+          // Mobile: Vertical carousel
+          <Carousel
+            className="w-full max-w-md mx-auto"
+            setApi={api => {
+              api?.on('select', () => {
+                const visibleSlide = api.selectedScrollSnap();
+                setActiveIdx(visibleSlide);
+              });
+            }}
+          >
+            <CarouselContent>
+              {featureMedia.map((feature, i) => {
+                const Icon = feature.icon;
+                return (
+                  <CarouselItem key={feature.title}>
+                    <MobileFeatureCard
+                      feature={feature}
+                      index={i}
+                      Icon={Icon}
+                      isActive={i === activeIdx}
+                    />
+                  </CarouselItem>
+                );
+              })}
+            </CarouselContent>
+            <div className="flex justify-center mt-6 gap-2">
+              <CarouselPrevious className="static transform-none mx-2" />
+              <CarouselNext className="static transform-none mx-2" />
             </div>
-          );
-        })}
-      </div>
-      {/* Bottom sticky trial CTA */}
-      <div className="w-full flex justify-center">
-        <div className="fixed bottom-7 left-0 right-0 z-40 flex justify-center pointer-events-none">
+            <div className="flex justify-center gap-2 mt-4">
+              {featureMedia.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveIdx(i)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    i === activeIdx 
+                      ? "bg-primary w-6" 
+                      : "bg-primary/30"
+                  }`}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
+            </div>
+          </Carousel>
+        ) : (
+          // Desktop: Apple-style feature showcase
+          <div className="grid grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {featureMedia.map((feature, i) => {
+              const Icon = feature.icon;
+              const isActive = i === activeIdx;
+              
+              return (
+                <div
+                  key={feature.title}
+                  className={`
+                    feature-card relative rounded-2xl 
+                    transition-all duration-500 ease-out
+                    ${entered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}
+                    ${isActive ? "scale-105 z-10" : "scale-100 opacity-70"}
+                  `}
+                  style={{
+                    transitionDelay: `${i * 100}ms`,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setActiveIdx(i)}
+                >
+                  <div className="h-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 flex flex-col">
+                    {/* Feature Badge + Icon */}
+                    <div className="flex items-center mb-4">
+                      <div 
+                        className={`
+                          mr-3 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold
+                          ${i === 0 ? "bg-purple-100 text-purple-600 border-2 border-purple-200" :
+                            i === 1 ? "bg-yellow-100 text-yellow-600 border-2 border-yellow-200" :
+                            "bg-green-100 text-green-600 border-2 border-green-200"}
+                        `}
+                      >
+                        {i + 1}
+                      </div>
+                      <Icon className={`
+                        w-8 h-8
+                        ${i === 0 ? "text-purple-500" :
+                          i === 1 ? "text-yellow-500" :
+                          "text-green-500"}
+                      `} />
+                    </div>
+                    
+                    {/* Title */}
+                    <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
+                    
+                    {/* Subtitle */}
+                    <p className="text-muted-foreground mb-6">{feature.subtitle}</p>
+                    
+                    {/* Media Display */}
+                    <div className="mt-auto">
+                      <div className={`
+                        overflow-hidden rounded-xl border-2
+                        ${isActive ? "ring-2 ring-primary/30 shadow-lg" : ""}
+                        ${i === 0 ? "border-purple-200/20" :
+                          i === 1 ? "border-yellow-200/20" :
+                          "border-green-200/20"}
+                      `}>
+                        <AspectRatio ratio={16/9}>
+                          <img
+                            src={feature.media}
+                            alt={feature.title}
+                            className="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
+                          />
+                        </AspectRatio>
+                      </div>
+                      
+                      {/* Feature detail button */}
+                      <div className={`
+                        mt-4 flex justify-end
+                        ${i === 0 ? "text-purple-500" :
+                          i === 1 ? "text-yellow-500" :
+                          "text-green-500"}
+                      `}>
+                        <Button
+                          variant="ghost"
+                          className="font-medium group"
+                        >
+                          Learn more
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="ml-1 group-hover:translate-x-1 transition-transform"
+                          >
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                          </svg>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        
+        {/* Apple-style feature indicator dots */}
+        {!isMobile && (
+          <div className="flex justify-center mt-12 space-x-2">
+            {featureMedia.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveIdx(i)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  i === activeIdx 
+                    ? "bg-primary w-6" 
+                    : "bg-primary/30"
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+        
+        {/* Sticky CTA */}
+        <div className="mt-16 flex justify-center">
           <Button
             size="lg"
-            className="px-8 py-4 text-xl font-bold rounded-full shadow-xl bg-primary pointer-events-auto"
+            className="px-8 py-6 text-lg font-bold rounded-full shadow-xl bg-primary hover:bg-primary/90 hover:scale-105 transition-all"
           >
             Start Free Trial
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="ml-2"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
           </Button>
         </div>
       </div>
@@ -197,3 +308,90 @@ export const LiveDemoPreview = () => {
   );
 };
 
+// Mobile Feature Card component
+const MobileFeatureCard = ({ 
+  feature, 
+  index, 
+  Icon, 
+  isActive 
+}: { 
+  feature: typeof featureMedia[0]; 
+  index: number; 
+  Icon: any; 
+  isActive: boolean;
+}) => {
+  return (
+    <div className={`
+      w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6
+      transition-all duration-300 ease-out
+      ${isActive ? "ring-2 ring-primary/30 shadow-lg" : ""}
+    `}>
+      {/* Feature Badge + Icon */}
+      <div className="flex items-center mb-4">
+        <div 
+          className={`
+            mr-3 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold
+            ${index === 0 ? "bg-purple-100 text-purple-600 border-2 border-purple-200" :
+              index === 1 ? "bg-yellow-100 text-yellow-600 border-2 border-yellow-200" :
+              "bg-green-100 text-green-600 border-2 border-green-200"}
+          `}
+        >
+          {index + 1}
+        </div>
+        <Icon className={`
+          w-8 h-8
+          ${index === 0 ? "text-purple-500" :
+            index === 1 ? "text-yellow-500" :
+            "text-green-500"}
+        `} />
+      </div>
+      
+      {/* Title */}
+      <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
+      
+      {/* Subtitle */}
+      <p className="text-muted-foreground mb-6">{feature.subtitle}</p>
+      
+      {/* Media Display */}
+      <div className="overflow-hidden rounded-xl border-2 border-white/10">
+        <AspectRatio ratio={16/9}>
+          <img
+            src={feature.media}
+            alt={feature.title}
+            className="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
+          />
+        </AspectRatio>
+      </div>
+      
+      {/* Feature detail button */}
+      <div className={`
+        mt-4 flex justify-end
+        ${index === 0 ? "text-purple-500" :
+          index === 1 ? "text-yellow-500" :
+          "text-green-500"}
+      `}>
+        <Button
+          variant="ghost"
+          className="font-medium group"
+        >
+          Learn more
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="ml-1 group-hover:translate-x-1 transition-transform"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </Button>
+      </div>
+    </div>
+  );
+};
