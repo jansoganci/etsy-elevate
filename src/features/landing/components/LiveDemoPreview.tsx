@@ -2,48 +2,50 @@
 import { useEffect, useRef, useState } from "react";
 import { Search, FileText, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { AnimateOnScroll } from "@/features/landing/components/AnimateOnScroll";
 import { 
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext 
-} from "@/components/ui/carousel";
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
 
-// Feature media content
-const featureMedia = [
+// Feature content data
+const featureContent = [
   {
+    id: 1,
     title: "SEO & Keyword Analysis",
     icon: Search,
     subtitle: "Find untapped opportunities with AI-powered keyword research.",
-    media: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80",
+    videoSrc: "https://placehold.it/1280x720.mp4", // Replace with actual video path
     color: "purple"
   },
   {
+    id: 2,
     title: "Effortless Listing Creation",
     icon: FileText,
     subtitle: "AI writes conversion-focused listings in seconds.",
-    media: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80",
+    videoSrc: "https://placehold.it/1280x720.mp4", // Replace with actual video path
     color: "yellow"
   },
   {
+    id: 3,
     title: "Visual Photo Editing",
     icon: Image,
     subtitle: "Transform product images with one-click enhancements.",
-    media: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+    videoSrc: "https://placehold.it/1280x720.mp4", // Replace with actual video path
     color: "green"
   }
 ];
 
 export const LiveDemoPreview = () => {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [entered, setEntered] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isInView, setIsInView] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
   // Check if device is mobile
   useEffect(() => {
     const checkMobile = () => {
@@ -56,53 +58,99 @@ export const LiveDemoPreview = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Animation entry effect
+  // Set up intersection observer for section entry
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setEntered(true);
-    }, 200);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.unobserve(entry.target);
+          
+          // Start video playback when in view
+          if (videoRef.current) {
+            videoRef.current.play();
+          }
+        }
+      },
+      { threshold: 0.2 }
+    );
     
-    return () => clearTimeout(timeout);
-  }, []);
-
-  // Auto-rotation for carousel on desktop
-  useEffect(() => {
-    if (isMobile) return;
-    
-    const startAutoRotation = () => {
-      intervalRef.current = setInterval(() => {
-        setActiveIdx(prev => (prev + 1) % featureMedia.length);
-      }, 5000);
-    };
-    
-    startAutoRotation();
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
     
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
     };
+  }, []);
+
+  // Set up scroll-based card highlighting for desktop
+  useEffect(() => {
+    if (isMobile) return;
+
+    const handleScroll = () => {
+      if (!sectionRef.current || cardRefs.current.some(ref => !ref)) return;
+      
+      // Find which card is most centered in the viewport
+      const cards = cardRefs.current;
+      let closestCard = 0;
+      let minDistance = Infinity;
+      
+      cards.forEach((card, index) => {
+        if (!card) return;
+        
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.top + rect.height / 2;
+        const viewportCenter = window.innerHeight / 2;
+        const distance = Math.abs(cardCenter - viewportCenter);
+        
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestCard = index;
+        }
+      });
+      
+      setActiveIndex(closestCard);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    // Initial check
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [isMobile]);
 
-  // Pause auto-rotation on hover
-  const handleMouseEnter = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-  };
-
-  const handleMouseLeave = () => {
-    if (!isMobile && intervalRef.current === null) {
-      intervalRef.current = setInterval(() => {
-        setActiveIdx(prev => (prev + 1) % featureMedia.length);
-      }, 5000);
+  // Handle mobile card click/tap
+  const handleCardClick = (index: number) => {
+    if (isMobile) {
+      setActiveIndex(index);
     }
   };
 
   return (
     <section 
       ref={sectionRef} 
-      className="relative py-24 overflow-hidden bg-gradient-to-b from-background to-background/80"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      className="relative py-24 overflow-hidden bg-background"
+      id="features"
     >
-      <div className="container px-4 mx-auto">
+      {/* Full-width video background with gradient overlay */}
+      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/10 to-background/30 z-10"></div>
+        <video 
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+        >
+          <source src={featureContent[activeIndex].videoSrc} type="video/mp4" />
+        </video>
+      </div>
+      
+      <div className="container relative z-10 px-4 mx-auto">
         <AnimateOnScroll animation="fade-up" className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
             Powerful Tools for <span className="text-primary">Etsy Sellers</span>
@@ -112,175 +160,124 @@ export const LiveDemoPreview = () => {
           </p>
         </AnimateOnScroll>
         
-        {isMobile ? (
-          // Mobile: Vertical carousel
-          <Carousel
-            className="w-full max-w-md mx-auto"
-            setApi={api => {
-              api?.on('select', () => {
-                const visibleSlide = api.selectedScrollSnap();
-                setActiveIdx(visibleSlide);
-              });
-            }}
-          >
-            <CarouselContent>
-              {featureMedia.map((feature, i) => {
-                const Icon = feature.icon;
-                return (
-                  <CarouselItem key={feature.title}>
-                    <MobileFeatureCard
-                      feature={feature}
-                      index={i}
-                      Icon={Icon}
-                      isActive={i === activeIdx}
-                    />
-                  </CarouselItem>
-                );
-              })}
-            </CarouselContent>
-            <div className="flex justify-center mt-6 gap-2">
-              <CarouselPrevious className="static transform-none mx-2" />
-              <CarouselNext className="static transform-none mx-2" />
-            </div>
-            <div className="flex justify-center gap-2 mt-4">
-              {featureMedia.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveIdx(i)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    i === activeIdx 
-                      ? "bg-primary w-6" 
-                      : "bg-primary/30"
-                  }`}
-                  aria-label={`Go to slide ${i + 1}`}
-                />
-              ))}
-            </div>
-          </Carousel>
-        ) : (
-          // Desktop: Apple-style feature showcase
-          <div className="grid grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {featureMedia.map((feature, i) => {
+        {/* Feature Cards Section */}
+        <TooltipProvider>
+          <div className={`
+            relative 
+            ${isMobile 
+              ? "flex flex-col items-center space-y-4" 
+              : "grid grid-cols-3 gap-6 max-w-6xl mx-auto"
+            }
+          `}>
+            {featureContent.map((feature, index) => {
               const Icon = feature.icon;
-              const isActive = i === activeIdx;
+              const isActive = index === activeIndex;
               
               return (
                 <div
-                  key={feature.title}
+                  key={feature.id}
+                  ref={el => cardRefs.current[index] = el}
                   className={`
-                    feature-card relative rounded-2xl 
+                    relative bg-white/10 dark:bg-black/40 backdrop-blur-sm 
+                    rounded-2xl overflow-hidden
                     transition-all duration-500 ease-out
-                    ${entered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}
-                    ${isActive ? "scale-105 z-10" : "scale-100 opacity-70"}
+                    ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}
+                    ${isActive 
+                      ? "scale-110 z-10 opacity-100 shadow-xl border-2 border-primary/50" 
+                      : "scale-100 opacity-60 border border-white/10"
+                    }
                   `}
                   style={{
-                    transitionDelay: `${i * 100}ms`,
+                    transitionDelay: `${index * 150}ms`,
                     cursor: "pointer",
                   }}
-                  onClick={() => setActiveIdx(i)}
+                  onClick={() => handleCardClick(index)}
                 >
-                  <div className="h-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 flex flex-col">
-                    {/* Feature Badge + Icon */}
-                    <div className="flex items-center mb-4">
-                      <div 
-                        className={`
-                          mr-3 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold
-                          ${i === 0 ? "bg-purple-100 text-purple-600 border-2 border-purple-200" :
-                            i === 1 ? "bg-yellow-100 text-yellow-600 border-2 border-yellow-200" :
-                            "bg-green-100 text-green-600 border-2 border-green-200"}
-                        `}
-                      >
-                        {i + 1}
-                      </div>
-                      <Icon className={`
-                        w-8 h-8
-                        ${i === 0 ? "text-purple-500" :
-                          i === 1 ? "text-yellow-500" :
-                          "text-green-500"}
-                      `} />
-                    </div>
-                    
-                    {/* Title */}
-                    <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
-                    
-                    {/* Subtitle */}
-                    <p className="text-muted-foreground mb-6">{feature.subtitle}</p>
-                    
-                    {/* Media Display */}
-                    <div className="mt-auto">
-                      <div className={`
-                        overflow-hidden rounded-xl border-2
-                        ${isActive ? "ring-2 ring-primary/30 shadow-lg" : ""}
-                        ${i === 0 ? "border-purple-200/20" :
-                          i === 1 ? "border-yellow-200/20" :
-                          "border-green-200/20"}
-                      `}>
-                        <AspectRatio ratio={16/9}>
-                          <img
-                            src={feature.media}
-                            alt={feature.title}
-                            className="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
-                          />
-                        </AspectRatio>
-                      </div>
-                      
-                      {/* Feature detail button */}
-                      <div className={`
-                        mt-4 flex justify-end
-                        ${i === 0 ? "text-purple-500" :
-                          i === 1 ? "text-yellow-500" :
-                          "text-green-500"}
-                      `}>
-                        <Button
-                          variant="ghost"
-                          className="font-medium group"
-                        >
-                          Learn more
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="ml-1 group-hover:translate-x-1 transition-transform"
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="p-6 flex flex-col h-full">
+                        {/* Numbered Badge + Icon */}
+                        <div className="flex items-center mb-4">
+                          <div 
+                            className={`
+                              mr-3 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold
+                              ${index === 0 ? "bg-purple-100 text-purple-600" :
+                                index === 1 ? "bg-yellow-100 text-yellow-600" :
+                                "bg-green-100 text-green-600"}
+                            `}
                           >
-                            <path d="M5 12h14" />
-                            <path d="m12 5 7 7-7 7" />
-                          </svg>
-                        </Button>
+                            {feature.id}
+                          </div>
+                          <Icon className={`
+                            w-8 h-8
+                            ${index === 0 ? "text-purple-500" :
+                              index === 1 ? "text-yellow-500" :
+                              "text-green-500"}
+                          `} />
+                        </div>
+                        
+                        {/* Title */}
+                        <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
+                        
+                        {/* Subtitle */}
+                        <p className="text-muted-foreground mb-4">{feature.subtitle}</p>
+                        
+                        {/* Preview Image/Video */}
+                        <div className={`
+                          mt-auto overflow-hidden rounded-xl border
+                          ${isActive ? "ring-2 ring-primary/30 shadow-lg" : ""}
+                          ${index === 0 ? "border-purple-200/20" :
+                            index === 1 ? "border-yellow-200/20" :
+                            "border-green-200/20"}
+                        `}>
+                          <div className="aspect-video">
+                            <video
+                              className="w-full h-full object-cover"
+                              autoPlay
+                              muted
+                              loop
+                              playsInline
+                            >
+                              <source src={feature.videoSrc} type="video/mp4" />
+                            </video>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p className="text-sm">Click to view {feature.title}</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               );
             })}
           </div>
-        )}
+        </TooltipProvider>
         
-        {/* Apple-style feature indicator dots */}
-        {!isMobile && (
-          <div className="flex justify-center mt-12 space-x-2">
-            {featureMedia.map((_, i) => (
+        {/* Feature indicator dots for mobile */}
+        {isMobile && (
+          <div className="flex justify-center mt-6 space-x-2">
+            {featureContent.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setActiveIdx(i)}
+                onClick={() => setActiveIndex(i)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  i === activeIdx 
+                  i === activeIndex 
                     ? "bg-primary w-6" 
                     : "bg-primary/30"
                 }`}
-                aria-label={`Go to slide ${i + 1}`}
+                aria-label={`Go to feature ${i + 1}`}
               />
             ))}
           </div>
         )}
         
-        {/* Sticky CTA */}
-        <div className="mt-16 flex justify-center">
+        {/* CTA Button */}
+        <AnimateOnScroll 
+          animation="fade-up" 
+          delay={300} 
+          className="mt-16 flex justify-center"
+        >
           <Button
             size="lg"
             className="px-8 py-6 text-lg font-bold rounded-full shadow-xl bg-primary hover:bg-primary/90 hover:scale-105 transition-all"
@@ -302,96 +299,8 @@ export const LiveDemoPreview = () => {
               <path d="m12 5 7 7-7 7" />
             </svg>
           </Button>
-        </div>
+        </AnimateOnScroll>
       </div>
     </section>
-  );
-};
-
-// Mobile Feature Card component
-const MobileFeatureCard = ({ 
-  feature, 
-  index, 
-  Icon, 
-  isActive 
-}: { 
-  feature: typeof featureMedia[0]; 
-  index: number; 
-  Icon: any; 
-  isActive: boolean;
-}) => {
-  return (
-    <div className={`
-      w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6
-      transition-all duration-300 ease-out
-      ${isActive ? "ring-2 ring-primary/30 shadow-lg" : ""}
-    `}>
-      {/* Feature Badge + Icon */}
-      <div className="flex items-center mb-4">
-        <div 
-          className={`
-            mr-3 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold
-            ${index === 0 ? "bg-purple-100 text-purple-600 border-2 border-purple-200" :
-              index === 1 ? "bg-yellow-100 text-yellow-600 border-2 border-yellow-200" :
-              "bg-green-100 text-green-600 border-2 border-green-200"}
-          `}
-        >
-          {index + 1}
-        </div>
-        <Icon className={`
-          w-8 h-8
-          ${index === 0 ? "text-purple-500" :
-            index === 1 ? "text-yellow-500" :
-            "text-green-500"}
-        `} />
-      </div>
-      
-      {/* Title */}
-      <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
-      
-      {/* Subtitle */}
-      <p className="text-muted-foreground mb-6">{feature.subtitle}</p>
-      
-      {/* Media Display */}
-      <div className="overflow-hidden rounded-xl border-2 border-white/10">
-        <AspectRatio ratio={16/9}>
-          <img
-            src={feature.media}
-            alt={feature.title}
-            className="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
-          />
-        </AspectRatio>
-      </div>
-      
-      {/* Feature detail button */}
-      <div className={`
-        mt-4 flex justify-end
-        ${index === 0 ? "text-purple-500" :
-          index === 1 ? "text-yellow-500" :
-          "text-green-500"}
-      `}>
-        <Button
-          variant="ghost"
-          className="font-medium group"
-        >
-          Learn more
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="ml-1 group-hover:translate-x-1 transition-transform"
-          >
-            <path d="M5 12h14" />
-            <path d="m12 5 7 7-7 7" />
-          </svg>
-        </Button>
-      </div>
-    </div>
   );
 };
