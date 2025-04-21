@@ -140,7 +140,11 @@ export const LiveDemoPreview = () => {
                   loop: true,
                 }}
                 className="w-full"
-                onSelect={(index) => setActiveIndex(index % featureContent.length)}
+                onSelect={(index) => {
+                  if (typeof index === 'number') {
+                    setActiveIndex(index % featureContent.length);
+                  }
+                }}
               >
                 <CarouselContent>
                   {featureContent.map((feature, index) => {
