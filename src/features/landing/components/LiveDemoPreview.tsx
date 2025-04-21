@@ -1,14 +1,19 @@
 
 import { useEffect, useRef, useState } from "react";
-import { Search, FileText, Image } from "lucide-react";
+import { Search, FileText, Image, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimateOnScroll } from "@/features/landing/components/AnimateOnScroll";
 import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger 
-} from "@/components/ui/tooltip";
+  Card,
+  CardContent
+} from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 // Feature content data
 const featureContent = [
@@ -40,11 +45,9 @@ const featureContent = [
 
 export const LiveDemoPreview = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isInView, setIsInView] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Check if device is mobile
   useEffect(() => {
@@ -58,219 +61,168 @@ export const LiveDemoPreview = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Set up intersection observer for section entry
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.unobserve(entry.target);
-          
-          // Start video playback when in view
-          if (videoRef.current) {
-            videoRef.current.play();
-          }
-        }
-      },
-      { threshold: 0.2 }
-    );
-    
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    // Play the video when the component mounts
+    if (videoRef.current) {
+      videoRef.current.play();
     }
-    
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
-
-  // Set up scroll-based card highlighting for desktop
-  useEffect(() => {
-    if (isMobile) return;
-
-    const handleScroll = () => {
-      if (!sectionRef.current || cardRefs.current.some(ref => !ref)) return;
-      
-      // Find which card is most centered in the viewport
-      const cards = cardRefs.current;
-      let closestCard = 0;
-      let minDistance = Infinity;
-      
-      cards.forEach((card, index) => {
-        if (!card) return;
-        
-        const rect = card.getBoundingClientRect();
-        const cardCenter = rect.top + rect.height / 2;
-        const viewportCenter = window.innerHeight / 2;
-        const distance = Math.abs(cardCenter - viewportCenter);
-        
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestCard = index;
-        }
-      });
-      
-      setActiveIndex(closestCard);
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    // Initial check
-    handleScroll();
-    
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isMobile]);
-
-  // Handle mobile card click/tap
-  const handleCardClick = (index: number) => {
-    if (isMobile) {
-      setActiveIndex(index);
-    }
-  };
+  }, [activeIndex]);
 
   return (
     <section 
       ref={sectionRef} 
-      className="relative py-24 overflow-hidden bg-background"
+      className="relative py-24 overflow-hidden"
       id="features"
     >
-      {/* Full-width video background with gradient overlay */}
-      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/10 to-background/30 z-10"></div>
-        <video 
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-        >
-          <source src={featureContent[activeIndex].videoSrc} type="video/mp4" />
-        </video>
+      {/* Animated background with gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/20 z-0">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_500px_at_50%_300px,rgba(155,135,245,0.3),transparent)]"></div>
+        </div>
       </div>
-      
+
       <div className="container relative z-10 px-4 mx-auto">
         <AnimateOnScroll animation="fade-up" className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-            Powerful Tools for <span className="text-primary">Etsy Sellers</span>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
+            Powerful Tools for <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">Etsy Sellers</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Simplify your workflow and boost sales with our integrated suite of seller tools.
           </p>
         </AnimateOnScroll>
         
-        {/* Feature Cards Section */}
-        <TooltipProvider>
-          <div className={`
-            relative 
-            ${isMobile 
-              ? "flex flex-col items-center space-y-4" 
-              : "grid grid-cols-3 gap-6 max-w-6xl mx-auto"
-            }
-          `}>
-            {featureContent.map((feature, index) => {
-              const Icon = feature.icon;
-              const isActive = index === activeIndex;
+        {/* Main feature display area */}
+        <div className="relative mt-12 md:mt-20 max-w-7xl mx-auto">
+          {/* Video/image display for current feature */}
+          <div className="mb-12 md:mb-16 relative">
+            <div className="aspect-video rounded-xl overflow-hidden shadow-2xl border border-white/10 relative group">
+              {/* Overlay with gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 opacity-80"></div>
               
-              return (
-                <div
-                  key={feature.id}
-                  ref={el => cardRefs.current[index] = el}
-                  className={`
-                    relative bg-white/10 dark:bg-black/40 backdrop-blur-sm 
-                    rounded-2xl overflow-hidden
-                    transition-all duration-500 ease-out
-                    ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"}
-                    ${isActive 
-                      ? "scale-110 z-10 opacity-100 shadow-xl border-2 border-primary/50" 
-                      : "scale-100 opacity-60 border border-white/10"
-                    }
-                  `}
-                  style={{
-                    transitionDelay: `${index * 150}ms`,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleCardClick(index)}
-                >
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="p-6 flex flex-col h-full">
-                        {/* Numbered Badge + Icon */}
-                        <div className="flex items-center mb-4">
-                          <div 
-                            className={`
-                              mr-3 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold
-                              ${index === 0 ? "bg-purple-100 text-purple-600" :
-                                index === 1 ? "bg-yellow-100 text-yellow-600" :
-                                "bg-green-100 text-green-600"}
-                            `}
-                          >
-                            {feature.id}
-                          </div>
-                          <Icon className={`
-                            w-8 h-8
-                            ${index === 0 ? "text-purple-500" :
-                              index === 1 ? "text-yellow-500" :
-                              "text-green-500"}
-                          `} />
-                        </div>
-                        
-                        {/* Title */}
-                        <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
-                        
-                        {/* Subtitle */}
-                        <p className="text-muted-foreground mb-4">{feature.subtitle}</p>
-                        
-                        {/* Preview Image/Video */}
-                        <div className={`
-                          mt-auto overflow-hidden rounded-xl border
-                          ${isActive ? "ring-2 ring-primary/30 shadow-lg" : ""}
-                          ${index === 0 ? "border-purple-200/20" :
-                            index === 1 ? "border-yellow-200/20" :
-                            "border-green-200/20"}
-                        `}>
-                          <div className="aspect-video">
-                            <video
-                              className="w-full h-full object-cover"
-                              autoPlay
-                              muted
-                              loop
-                              playsInline
-                            >
-                              <source src={feature.videoSrc} type="video/mp4" />
-                            </video>
-                          </div>
-                        </div>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                      <p className="text-sm">Click to view {feature.title}</p>
-                    </TooltipContent>
-                  </Tooltip>
+              {/* Feature video */}
+              <video 
+                ref={videoRef}
+                className="w-full h-full object-cover"
+                autoPlay 
+                playsInline
+                muted 
+                loop
+              >
+                <source src={featureContent[activeIndex].videoSrc} type="video/mp4" />
+              </video>
+              
+              {/* Feature title overlay */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-20 bg-gradient-to-t from-black/80 to-transparent">
+                <div className="flex items-center">
+                  <div className={`
+                    mr-4 w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold shrink-0
+                    ${activeIndex === 0 ? "bg-purple-100 text-purple-600" :
+                      activeIndex === 1 ? "bg-yellow-100 text-yellow-600" :
+                      "bg-green-100 text-green-600"}
+                  `}>
+                    {featureContent[activeIndex].id}
+                  </div>
+                  <div>
+                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{featureContent[activeIndex].title}</h3>
+                    <p className="text-white/80 text-lg md:text-xl max-w-2xl">{featureContent[activeIndex].subtitle}</p>
+                  </div>
                 </div>
-              );
-            })}
+              </div>
+            </div>
           </div>
-        </TooltipProvider>
-        
-        {/* Feature indicator dots for mobile */}
-        {isMobile && (
-          <div className="flex justify-center mt-6 space-x-2">
-            {featureContent.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveIndex(i)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  i === activeIndex 
-                    ? "bg-primary w-6" 
-                    : "bg-primary/30"
-                }`}
-                aria-label={`Go to feature ${i + 1}`}
-              />
-            ))}
-          </div>
-        )}
+
+          {/* Feature selection area */}
+          {isMobile ? (
+            <div className="px-4">
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                className="w-full"
+                onSelect={(index) => setActiveIndex(index % featureContent.length)}
+              >
+                <CarouselContent>
+                  {featureContent.map((feature, index) => {
+                    const Icon = feature.icon;
+                    return (
+                      <CarouselItem key={feature.id} className="md:basis-1/2 lg:basis-1/3">
+                        <Card className={`border-l-4 ${
+                          index === 0 ? "border-l-purple-500" :
+                          index === 1 ? "border-l-yellow-500" :
+                          "border-l-green-500"
+                        } hover:shadow-lg transition-all duration-300 h-full`}>
+                          <CardContent className="p-6">
+                            <div className="flex items-center mb-4">
+                              <Icon className={`
+                                w-7 h-7
+                                ${index === 0 ? "text-purple-500" :
+                                  index === 1 ? "text-yellow-500" :
+                                  "text-green-500"}
+                              `} />
+                              <div className="ml-3 font-semibold text-lg">{feature.title}</div>
+                            </div>
+                            <p className="text-muted-foreground">{feature.subtitle}</p>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    );
+                  })}
+                </CarouselContent>
+                <div className="flex justify-center mt-4 gap-2">
+                  <CarouselPrevious className="relative -left-0 static" />
+                  <CarouselNext className="relative -right-0 static" />
+                </div>
+              </Carousel>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {featureContent.map((feature, index) => {
+                const Icon = feature.icon;
+                const isActive = index === activeIndex;
+                
+                return (
+                  <Card 
+                    key={feature.id}
+                    className={`
+                      overflow-hidden border-l-4 transition-all duration-300
+                      ${isActive ? 'ring-2 ring-primary shadow-lg' : 'opacity-80 hover:opacity-100'}
+                      ${index === 0 ? "border-l-purple-500" :
+                        index === 1 ? "border-l-yellow-500" :
+                        "border-l-green-500"}
+                    `}
+                    onClick={() => setActiveIndex(index)}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-center mb-3">
+                        <Icon className={`
+                          w-6 h-6
+                          ${index === 0 ? "text-purple-500" :
+                            index === 1 ? "text-yellow-500" :
+                            "text-green-500"}
+                        `} />
+                        <span className="ml-3 font-bold text-lg">{feature.title}</span>
+                      </div>
+                      <p className="text-muted-foreground text-sm">{feature.subtitle}</p>
+                      
+                      <div className={`
+                        mt-4 text-sm font-medium flex items-center
+                        ${index === 0 ? "text-purple-500" :
+                          index === 1 ? "text-yellow-500" :
+                          "text-green-500"}
+                        transition-opacity duration-300
+                        ${isActive ? 'opacity-100' : 'opacity-0'}
+                      `}>
+                        <span>Currently viewing</span>
+                        <ArrowRight className="w-4 h-4 ml-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </div>
         
         {/* CTA Button */}
         <AnimateOnScroll 
@@ -280,24 +232,10 @@ export const LiveDemoPreview = () => {
         >
           <Button
             size="lg"
-            className="px-8 py-6 text-lg font-bold rounded-full shadow-xl bg-primary hover:bg-primary/90 hover:scale-105 transition-all"
+            className="px-8 py-6 text-lg font-bold rounded-full shadow-xl bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 hover:scale-105 transition-all"
           >
             Start Free Trial
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="ml-2"
-            >
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
+            <ArrowRight className="ml-2" />
           </Button>
         </AnimateOnScroll>
       </div>
